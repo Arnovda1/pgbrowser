@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import TablesSidebar from '$lib/components/navigation/app-sidebar.svelte';
+	import TablesSidebar from '$lib/components/navigation/sidebar/app-sidebar.svelte';
 	import TopBar from '$lib/components/navigation/top-bar.svelte';
 	import SidebarInset from '$lib/components/ui/sidebar/sidebar-inset.svelte';
 	import SidebarProvider from '$lib/components/ui/sidebar/sidebar-provider.svelte';
@@ -22,17 +22,15 @@
 	onMount(() => {
 		if (!db.connection) goto('/connect');
 	});
-
 </script>
-
 
 <div class="h-dvh w-full">
 	<SidebarProvider>
 		<TablesSidebar {...data} />
 
-		<SidebarInset class='p-3 space-y-3'>
+		<SidebarInset class="space-y-3 p-3">
 			<TopBar {...data} />
-			
+
 			{@render children()}
 		</SidebarInset>
 	</SidebarProvider>

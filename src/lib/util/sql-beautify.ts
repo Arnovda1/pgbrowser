@@ -1,7 +1,7 @@
 import type { EditorView } from "codemirror";
 import { format } from "sql-formatter";
 
-const beautifySql = (view: EditorView) => {
+const beautifySql = (view?: EditorView) => {
   if (!view) return;
   const unformattedSQL = view.state.doc.toString();
   

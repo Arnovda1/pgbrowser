@@ -7,18 +7,23 @@
 	import { materialOcean } from '@fsegurai/codemirror-theme-material-ocean';
 	import { EditorView } from 'codemirror';
 	import CodeMirror from 'svelte-codemirror-editor';
+	import { cn } from 'tailwind-variants';
 
 	let {
 		code = $bindable(''),
 		view = $bindable<EditorView | undefined>(undefined),
+		class: className,
 	}: {
 		code: string;
 		view: EditorView | undefined;
+		class?: string;
 	} = $props();
 
 	const pg = SQLDialect.define({
 		...PostgreSQL.spec,
 		caseInsensitiveIdentifiers: true,
+		operatorChars: '+-*/%=<>!&|~^$',
+		doubleDollarQuotedStrings: false,
 	});
 
 	let sqlExtension = $derived(
@@ -35,7 +40,7 @@
 	);
 
 	$effect(() => {
-		const currentCode = code;
+		const currentCode = code ? code.replace(/\$function\$/g, '$$$$') : '';
 
 		if (view && currentCode !== view.state.doc.toString()) {
 			view.dispatch({
@@ -59,7 +64,7 @@
 			{ key: 'Mod-Alt-g', run: () => true },
 		]}
 		onready={v => (view = v)}
-		class="sql-editor h-full overflow-hidden rounded-2xl border font-mono"
+		class={cn('sql-editor h-full overflow-hidden rounded-2xl border font-mono', className)}
 		extensions={theme.isDark ? [materialOcean] : []}
 	/>
 {/key}

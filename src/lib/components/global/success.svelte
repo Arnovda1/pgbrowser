@@ -3,25 +3,25 @@
 	import { cn } from 'tailwind-variants';
 
 	let {
-		error,
+		message,
 		small = false,
 		class: className = '',
 	}: {
-		error?: string | null;
+		message?: string | null;
 		small?: boolean;
 		class?: string;
 	} = $props();
 </script>
 
-{#if error}
+{#if message}
 	<p
 		class={cn(`
-			my-auto rounded-2xl bg-destructive/10 px-3 text-sm text-destructive
-			${small ? 'py-0.5 text-sm' : 'py-2'}
-			${className}
-		`)}
+    my-auto rounded-2xl bg-primary/10 px-3 text-sm text-primary
+    ${small ? 'py-0.5 text-sm' : 'py-2'}
+    ${className}
+  `)}
 		transition:slide={{ duration: 100 }}
 	>
-		{error}
+		{message}
 	</p>
 {/if}

@@ -28,7 +28,7 @@ export type Column = {
 export type Row = Record<string, unknown>;
 
 export type Func = {
-	functionName: string;
+	name: string;
 	returnType: 'trigger' | 'void' | 'boolean' | 'bigint' | 'record' | string;
 };
 
@@ -42,12 +42,12 @@ export interface Trigger {
 }
 
 export type FuncDetails = {
-	functionOid: number;
-	functionName: string;
-	languageName: string;
+	oid: number;
+	name: string;
+	language: string;
 	returnType: string;
 	argumentSignature: string;
-	functionBody: string;
+	body: string;
 	behaviorType: 'IMMUTABLE' | 'STABLE' | 'VOLATILE';
 };
 

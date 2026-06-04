@@ -25,17 +25,6 @@
 
 	const { database, schema, table, functionName } = $derived(page.params);
 
-	// let uniqueFuncs = $derived.by(() => {
-	//   return Array.from(funcs.reduce((map, f) => {
-	//     if (map.has(f.functionName)) {
-	//       map.get(f.functionName).amount += 1;
-	//     } else {
-	//       map.set(f.functionName, { ...f, amount: 1 });
-	//     }
-	//     return map;
-	//   }, new Map()).values());
-	// });
-
 	const closeMobile = () => {
 		sidebar.setOpenMobile(false);
 	};
@@ -44,8 +33,6 @@
 <Sidebar.Root variant="floating">
 	<Sidebar.Header>
 		<Sidebar.Menu>
-			<!-- <Sidebar.GroupLabel>Database</Sidebar.GroupLabel> -->
-			<!-- {#if db.connection && 'database' in db.connection && db.connection.type !== 'mongodb'} -->
 			{#if db.connection}
 				<!-- database -->
 

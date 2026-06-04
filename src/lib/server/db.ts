@@ -191,7 +191,7 @@ export const getFunctions = async (dbUrl: string, schema: string): Promise<FuncQ
 
 		const result = await client`
       SELECT 
-        routine_name AS "functionName",
+        routine_name AS "name",
         data_type AS "returnType"
       FROM 
         information_schema.routines
@@ -228,12 +228,12 @@ export const getFunctionDetails = async (
 
 		const result = await client`
       SELECT 
-        p.oid AS "functionOid",
-        p.proname AS "functionName",
-        l.lanname AS "languageName",
+        p.oid AS "oid",
+        p.proname AS "name",
+        l.lanname AS "language",
         pg_get_function_result(p.oid) AS "returnType",
         pg_get_function_arguments(p.oid) AS "argumentSignature",
-        p.prosrc AS "functionBody",
+        pg_get_functiondef(p.oid) AS "body",
         CASE p.provolatile
           WHEN 'i' THEN 'IMMUTABLE'
           WHEN 's' THEN 'STABLE'

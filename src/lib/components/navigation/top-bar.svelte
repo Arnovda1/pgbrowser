@@ -75,8 +75,8 @@
 					href: null,
 					dropdownLabel: 'Functions',
 					items: funcs,
-					getLabel: (f: Func) => f.functionName,
-					getHref: (f: Func) => `/db/${database}/schema/${schema}/func/${f.functionName}`,
+					getLabel: (f: Func) => f.name,
+					getHref: (f: Func) => `/db/${database}/schema/${schema}/func/${f.name}`,
 				},
 				{
 					visible: !!triggerName,
