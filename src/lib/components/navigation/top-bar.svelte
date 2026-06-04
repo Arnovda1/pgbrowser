@@ -1,109 +1,121 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import postgres from '$lib/assets/db-icons/postgres.svg';
-	import * as Breadcrumb from "$lib/components/ui/breadcrumb";
-	import db from "$lib/stores/db.svelte";
-	import type { Func, Trigger } from "$lib/types";
-	import { BoxesIcon, DatabaseIcon, FunctionSquareIcon, PlayIcon, TableIcon, TerminalSquareIcon, TextAlignJustifyIcon, ZapIcon } from "lucide-svelte";
-	import Button from "../ui/button/button.svelte";
-	import SidebarTrigger from "../ui/sidebar/sidebar-trigger.svelte";
-	import BreadcrumbSegment, { type breadcrumbSegmentInput } from "./breadcrumb-segment.svelte";
-	import BreadcrumbSeparator from "./breadcrumb-separator.svelte";
-  
-  let {
-    databases,
+	import { page } from '$app/state';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
+	import db from '$lib/stores/db.svelte';
+	import type { Func, Trigger } from '$lib/types';
+	import {
+		BoxesIcon,
+		DatabaseIcon,
+		FunctionSquareIcon,
+		PlayIcon,
+		TableIcon,
+		TerminalSquareIcon,
+		TextAlignJustifyIcon,
+		ZapIcon,
+	} from 'lucide-svelte';
+	import PostgresIcon from '../postgres-icon.svelte';
+	import Button from '../ui/button/button.svelte';
+	import SidebarTrigger from '../ui/sidebar/sidebar-trigger.svelte';
+	import BreadcrumbSegment, { type breadcrumbSegmentInput } from './breadcrumb-segment.svelte';
+	import BreadcrumbSeparator from './breadcrumb-separator.svelte';
+
+	let {
+		databases,
 		tables,
-    schemas,
-    funcs,
-    triggers,
+		schemas,
+		funcs,
+		triggers,
 	}: {
-    databases: string[]
+		databases: string[];
 		tables: string[];
-    schemas: string[];
-    funcs: Func[];
-    triggers: Trigger[];
+		schemas: string[];
+		funcs: Func[];
+		triggers: Trigger[];
 	} = $props();
 
-  const { database, schema, table, functionName, triggerName } = $derived(page.params);
+	const { database, schema, table, functionName, triggerName } = $derived(page.params);
 
-  const segments = $derived(([
-    {
-      visible: !!database,
-      label: database,
-      icon: DatabaseIcon,
-      href: `/db/${database}`,
-      dropdownLabel: 'Databases',
-      items: databases,
-      getLabel: (d: string) => d,
-      getHref: (d: string) => `/db/${d}`,
-    },
-    {
-      visible: !!schema,
-      label: schema,
-      icon: BoxesIcon,
-      href: `/db/${database}/schema/${schema}`,
-      dropdownLabel: 'Schemas',
-      items: schemas,
-      getLabel: (s: string) => s,
-      getHref: (s: string) => `/db/${database}/schema/${s}`,
-    },
-    {
-      visible: !!table,
-      label: table,
-      icon: TableIcon,
-      href: `/db/${database}/schema/${schema}/table/${table}`,
-      dropdownLabel: 'Tables',
-      items: tables,
-      getLabel: (t: string) => t,
-      getHref: (t: string) => `/db/${database}/schema/${schema}/table/${t}`,
-    },
-    {
-      visible: !!functionName,
-      label: functionName,
-      icon: FunctionSquareIcon,
-      href: null,
-      dropdownLabel: 'Functions',
-      items: funcs,
-      getLabel: (f: Func) => f.functionName,
-      getHref: (f: Func) => `/db/${database}/schema/${schema}/func/${f.functionName}`,
-    },
-    {
-      visible: !!triggerName,
-      label: triggerName,
-      icon: ZapIcon,
-      href: null,
-      dropdownLabel: 'Triggers',
-      items: triggers.filter(t => t.tableName === table),
-      getLabel: (t: Trigger) => t.triggerName,
-      getHref: (t: Trigger) => `/db/${database}/schema/${schema}/table/${table}/trigger/${t.triggerName}`,
-    }
-  ] satisfies breadcrumbSegmentInput[]).filter(s => s.visible));
-
+	const segments = $derived(
+		(
+			[
+				{
+					visible: !!database,
+					label: database,
+					icon: DatabaseIcon,
+					href: `/db/${database}`,
+					dropdownLabel: 'Databases',
+					items: databases,
+					getLabel: (d: string) => d,
+					getHref: (d: string) => `/db/${d}`,
+				},
+				{
+					visible: !!schema,
+					label: schema,
+					icon: BoxesIcon,
+					href: `/db/${database}/schema/${schema}`,
+					dropdownLabel: 'Schemas',
+					items: schemas,
+					getLabel: (s: string) => s,
+					getHref: (s: string) => `/db/${database}/schema/${s}`,
+				},
+				{
+					visible: !!table,
+					label: table,
+					icon: TableIcon,
+					href: `/db/${database}/schema/${schema}/table/${table}`,
+					dropdownLabel: 'Tables',
+					items: tables,
+					getLabel: (t: string) => t,
+					getHref: (t: string) => `/db/${database}/schema/${schema}/table/${t}`,
+				},
+				{
+					visible: !!functionName,
+					label: functionName,
+					icon: FunctionSquareIcon,
+					href: null,
+					dropdownLabel: 'Functions',
+					items: funcs,
+					getLabel: (f: Func) => f.functionName,
+					getHref: (f: Func) => `/db/${database}/schema/${schema}/func/${f.functionName}`,
+				},
+				{
+					visible: !!triggerName,
+					label: triggerName,
+					icon: ZapIcon,
+					href: null,
+					dropdownLabel: 'Triggers',
+					items: triggers.filter(t => t.tableName === table),
+					getLabel: (t: Trigger) => t.triggerName,
+					getHref: (t: Trigger) =>
+						`/db/${database}/schema/${schema}/table/${table}/trigger/${t.triggerName}`,
+				},
+			] satisfies breadcrumbSegmentInput[]
+		).filter(s => s.visible),
+	);
 </script>
- 
+
 <div class="flex items-center justify-between">
+	<Breadcrumb.Root>
+		<Breadcrumb.List>
+			<SidebarTrigger />
 
-  <Breadcrumb.Root>
-    <Breadcrumb.List>
+			<div class="h-6 border-r"></div>
 
-      <SidebarTrigger />
+			{#if db.connection}
+				<Breadcrumb.Link class="flex items-center gap-1.5">
+					<Button variant="ghost">
+						<PostgresIcon />
+						<!-- <img src={postgres} alt='' class="size-5 grayscale" /> -->
+						{' '}{db.connection.host}:{db.connection.port}
+					</Button>
+				</Breadcrumb.Link>
+			{/if}
 
-      <div class="border-r h-6"></div>
+			{#each segments as segment}
+				<BreadcrumbSegment {...segment} />
+			{/each}
 
-      {#if db.connection}
-        <Breadcrumb.Link class='flex items-center gap-1.5'>
-          <Button variant='ghost'>
-            <img src={postgres} alt='' class="size-5 grayscale" />
-            {' '}{db.connection.host}:{db.connection.port}
-          </Button>
-        </Breadcrumb.Link>
-      {/if}
-
-      {#each segments as segment}
-        <BreadcrumbSegment {...segment} />
-      {/each}
-
-      <!-- {#if database}
+			<!-- {#if database}
         <Breadcrumb.Separator />
         <Breadcrumb.Item>
           <HoverCard.Root openDelay={300} closeDelay={0}>
@@ -123,9 +135,9 @@
         </Breadcrumb.Item>
       {/if} -->
 
-      <!-- should make these a hover popover, so clicking still returns it to the current schema / func / table -->
-      
-      <!-- {#if schema}
+			<!-- should make these a hover popover, so clicking still returns it to the current schema / func / table -->
+
+			<!-- {#if schema}
         <Breadcrumb.Separator />
         <Breadcrumb.Item>
           <HoverCard.Root openDelay={300} closeDelay={0}>
@@ -205,30 +217,29 @@
         </Breadcrumb.Item>
       {/if} -->
 
-      {#if page.url.pathname === `/db/${database}/schema/${schema}/query`}
-        <BreadcrumbSeparator />
-        <Breadcrumb.Link class='flex items-center gap-1.5'>
-          <Button variant='ghost'>
-            <TerminalSquareIcon /> Query
-          </Button>
-        </Breadcrumb.Link>
-      {/if}
+			{#if page.url.pathname === `/db/${database}/schema/${schema}/query`}
+				<BreadcrumbSeparator />
+				<Breadcrumb.Link class="flex items-center gap-1.5">
+					<Button variant="ghost">
+						<TerminalSquareIcon /> Query
+					</Button>
+				</Breadcrumb.Link>
+			{/if}
 
-      {#if page.url.pathname === `/db/${database}/schema/${schema}/table/${table}/select`}
-        <BreadcrumbSeparator />
-        <Breadcrumb.Link class='flex items-center gap-1.5'>
-          <Button variant='ghost'>
-            <TextAlignJustifyIcon /> Select
-          </Button>
-        </Breadcrumb.Link>
-      {/if}
-  
-    </Breadcrumb.List>
-  </Breadcrumb.Root>
+			{#if page.url.pathname === `/db/${database}/schema/${schema}/table/${table}/select`}
+				<BreadcrumbSeparator />
+				<Breadcrumb.Link class="flex items-center gap-1.5">
+					<Button variant="ghost">
+						<TextAlignJustifyIcon /> Select
+					</Button>
+				</Breadcrumb.Link>
+			{/if}
+		</Breadcrumb.List>
+	</Breadcrumb.Root>
 
-  {#if database && !page.url.pathname.endsWith('/query')}
-    <Button href={`/db/${database}/schema/${schema || 'public'}/query`}>
-      <PlayIcon /> Query
-    </Button>
-  {/if}
+	{#if database && !page.url.pathname.endsWith('/query')}
+		<Button href={`/db/${database}/schema/${schema || 'public'}/query`}>
+			<PlayIcon /> Query
+		</Button>
+	{/if}
 </div>
