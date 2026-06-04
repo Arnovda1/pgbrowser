@@ -1,42 +1,62 @@
-# sv
+# pgbrowser
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+pgbrowser is a web based PostgreSQL browser built with Svelte 5 and Bun. It provides a lightweight interface for database exploration and query execution, compiling to a single binary with no external dependencies.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+* Database Navigation: Browse databases, schemas, and tables.
+* Schema Exploration: View table structures, columns, indexes, foreign keys, and check constraints.
+* Logic Inspection: List and view details for functions and triggers.
+* Query Editor: Execute SQL with a CodeMirror 6 editor featuring SQL syntax highlighting and JSON formatting.
+* Data Viewer: Browse table records with support for JSON pretty-printing and null value visualization.
+* Metrics: View schema and table size metrics.
 
-```sh
-# create a new project
-npx sv create my-app
+## Screenshots
+
+## Tech Stack
+
+* Framework: Svelte 5 and SvelteKit
+* Runtime: Bun
+* Styling: Tailwind v4
+* Database Client: Postgres.js
+
+## Prerequisites
+
+* Bun (>v1.1)
+* Docker (optional)
+
+## Installation and Build
+
+### From Source
+
+```bash
+git clone https://github.com/Arnovda1/pgbrowser.git
+cd pgbrowser
+bun install
+bun run build
 ```
 
-To recreate this project with the same configuration:
+The build process generates a binary at `dist/pgbrowser`.
 
-```sh
-# recreate this project
-bun x sv@0.15.3 create --template minimal --types ts --add prettier tailwindcss="plugins:none" --install bun .
+### Using Docker
+
+```bash
+docker build -t pgbrowser .
+docker run -p 3000:3000 pgbrowser
 ```
 
-## Developing
+> Use `host.docker.internal` instead of `localhost` when connecting to a postgres server running on the host machine.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Development
 
-```sh
-npm run dev
+Start the development server with hot module replacement:
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+bun dev
 ```
 
-## Building
+The application will be available at `http://localhost:5173`.
 
-To create a production version of your app:
+## License
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+This project is licensed under the MIT License.

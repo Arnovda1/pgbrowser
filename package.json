@@ -1,10 +1,24 @@
 {
-	"name": "frontend",
+	"name": "pgbrowser",
 	"private": true,
-	"version": "0.0.1",
+	"version": "0.1.0-alpha.1",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Arnovda1/pgbrowser.git"
+	},
+	"keywords": [
+		"postgres",
+		"postgresql",
+		"database-client",
+		"pgadmin",
+		"svelte",
+		"lightweight"
+	],
+	"license": "MIT",
 	"scripts": {
 		"dev": "bun --bun vite dev",
+		"build:install": "bun install && bun --bun vite build",
 		"build": "bun --bun vite build",
 		"preview": "bun --bun vite preview",
 		"prepare": "svelte-kit sync || echo ''",

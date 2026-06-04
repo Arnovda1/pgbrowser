@@ -19,10 +19,10 @@ WORKDIR /app
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN mkdir -p /app/data && chown -R appuser:appgroup /app
 
-COPY --from=builder --chown=appuser:appgroup /app/dist/adminer-clone /app/adminer-clone
+COPY --from=builder --chown=appuser:appgroup /app/dist/pgbrowser /app/pgbrowser
 
 ENV NODE_ENV=production
 USER appuser
 EXPOSE 3000
 
-CMD ["/app/adminer-clone"]
+CMD ["/app/pgbrowser"]

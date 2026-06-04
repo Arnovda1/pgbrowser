@@ -1,18 +1,13 @@
 <script lang="ts">
-	import { page } from "$app/state";
-	import ListFunctions from "$lib/components/lists/list-functions.svelte";
-	import ListTables from "$lib/components/lists/list-tables.svelte";
-	import ListTriggers from "$lib/components/lists/list-triggers.svelte";
+	import { page } from '$app/state';
+	import ListFunctions from '$lib/components/lists/list-functions.svelte';
+	import ListTables from '$lib/components/lists/list-tables.svelte';
+	import ListTriggers from '$lib/components/lists/list-triggers.svelte';
 
-  let { data } = $props();
+	let { data } = $props();
 
-  const { database, schema } = $derived(page.params);
-
+	const { database, schema } = $derived(page.params);
 </script>
-
-hello
-
-{JSON.stringify(data.sizeMetrics)}
 
 <h2>Tables</h2>
 <ListTables tables={data.tables} />

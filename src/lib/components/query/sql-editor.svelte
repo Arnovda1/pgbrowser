@@ -35,14 +35,14 @@
 	);
 
 	$effect(() => {
-    const currentCode = code; 
-    
-    if (view && currentCode !== view.state.doc.toString()) {
-      view.dispatch({
-        changes: { from: 0, to: view.state.doc.length, insert: currentCode },
-      });
-    }
-  });
+		const currentCode = code;
+
+		if (view && currentCode !== view.state.doc.toString()) {
+			view.dispatch({
+				changes: { from: 0, to: view.state.doc.length, insert: currentCode },
+			});
+		}
+	});
 </script>
 
 {#key schemaStore.structure}
@@ -58,8 +58,8 @@
 			{ key: 'Mod-G', run: () => true },
 			{ key: 'Mod-Alt-g', run: () => true },
 		]}
-		onready={v => view = v}
-		class="sql-editor border rounded-2xl overflow-hidden font-mono h-full"
+		onready={v => (view = v)}
+		class="sql-editor h-full overflow-hidden rounded-2xl border font-mono"
 		extensions={theme.isDark ? [materialOcean] : []}
 	/>
 {/key}
