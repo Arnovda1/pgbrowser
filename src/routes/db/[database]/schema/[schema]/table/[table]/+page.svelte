@@ -3,6 +3,7 @@
 	import ListTriggers from '$lib/components/lists/list-triggers.svelte';
 	import TableCheckConstraints from '$lib/components/tables/table-check-constraints.svelte';
 	import TableIndexes from '$lib/components/tables/table-indexes.svelte';
+	import TableRls from '$lib/components/tables/table-rls.svelte';
 	import TableStructure from '$lib/components/tables/table-structure.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Tabs from '$lib/components/ui/tabs';
@@ -57,5 +58,8 @@
 
 	<Tabs.Content value="rls" class="space-y-2">
 		<h2>Row Level Security</h2>
+		<div class="overflow-hidden rounded-xl bg-muted/50 p-2">
+			<TableRls rls={data.rls} />
+		</div>
 	</Tabs.Content>
 </Tabs.Root>

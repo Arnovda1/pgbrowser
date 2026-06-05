@@ -12,6 +12,8 @@ import type {
 	FuncDetailsQueryResult,
 	FuncQueryResult,
 	QueryResult,
+	RLSInfo,
+	RLSQueryResult,
 	TableIndex,
 	TableIndexQueryResult,
 	TableSizeMetrics,
@@ -195,6 +197,16 @@ export const getTableIndexes = async (params: Params): Promise<TableIndex[]> => 
 export const getSchemaSizeMetrics = async (params: Params): Promise<TableSizeMetrics[]> => {
 	const { data: result } = await apiClient.get<TableSizeMetricsQueryResult>(
 		`/api/schemas/${params.schema}/size-metrics?db=${encodedDbUrl(params)}`,
+	);
+
+	if (!result.success) throw new Error(result.error);
+
+	return result.data;
+};
+
+export const getTableRLS = async (params: Params): Promise<RLSInfo[]> => {
+	const { data: result } = await apiClient.get<RLSQueryResult>(
+		`/api/schemas/${params.schema}/tables/${params.table}/rls?db=${encodedDbUrl(params)}`,
 	);
 
 	if (!result.success) throw new Error(result.error);

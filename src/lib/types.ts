@@ -106,6 +106,16 @@ export type DbResponse<T> =
 			meta: FailureMeta;
 	  };
 
+export type RLSInfo = {
+  isRlsEnabled: boolean;
+  isRlsForced: boolean;
+  policyName: string | null;
+  command: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'ALL' | null;
+  roles: string | null;
+  usingExpression: string | null;
+  withCheckExpression: string | null;
+};
+
 export type TableSizeMetricsQueryResult = DbResponse<TableSizeMetrics>;
 export type QueryResult = DbResponse<unknown>;
 export type ColumnQueryResult = DbResponse<Column>;
@@ -115,3 +125,4 @@ export type TriggerQueryResult = DbResponse<Trigger>;
 export type CheckConstraintQueryResult = DbResponse<CheckConstraint>;
 export type ForeignKeyQueryResult = DbResponse<ForeignKey>;
 export type TableIndexQueryResult = DbResponse<TableIndex>;
+export type RLSQueryResult = DbResponse<RLSInfo>;

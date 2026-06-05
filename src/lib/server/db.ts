@@ -11,6 +11,8 @@ import type {
 	FuncDetailsQueryResult,
 	FuncQueryResult,
 	QueryResult,
+	RLSInfo,
+	RLSQueryResult,
 	TableIndex,
 	TableIndexQueryResult,
 	TableSizeMetrics,
@@ -31,7 +33,7 @@ const getClient = (dbUrl: string): Sql => {
 	}
 
 	if (!dbClients.has(dbUrl)) {
-		const client = postgres(dbUrl);
+		const client = postgres(dbUrl, { max: 1 });
 		dbClients.set(dbUrl, client);
 	}
 
@@ -183,7 +185,7 @@ export const getTableColumns = async (
 	}
 };
 
-export const getFunctions = async (dbUrl: string, schema: string): Promise<FuncQueryResult> => {
+export const getFunctions = async (dbUrl: string, schemaName: string = 'public'): Promise<FuncQueryResult> => {
 	const startTime = performance.now();
 
 	try {
@@ -196,7 +198,7 @@ export const getFunctions = async (dbUrl: string, schema: string): Promise<FuncQ
       FROM 
         information_schema.routines
       WHERE 
-        routine_schema = ${schema}
+        routine_schema = ${schemaName}
         AND routine_type = 'FUNCTION'
       ORDER BY 
         routine_name;
@@ -498,4 +500,59 @@ export const getSchemaDataUsage = async (
 			},
 		};
 	}
+};
+
+export const getTableRLS = async (
+  dbUrl: string,
+  tableName: string,
+  schemaName = 'public',
+): Promise<RLSQueryResult> => {
+  const startTime = performance.now();
+  try {
+    const client = getClient(dbUrl);
+
+    const result = await client`
+      SELECT
+        c.relrowsecurity AS "isRlsEnabled",
+        c.relforcerowsecurity AS "isRlsForced",
+        p.polname AS "policyName",
+        CASE p.polcmd
+          WHEN 'r' THEN 'SELECT'
+          WHEN 'a' THEN 'INSERT'
+          WHEN 'w' THEN 'UPDATE'
+          WHEN 'd' THEN 'DELETE'
+          WHEN '*' THEN 'ALL'
+          ELSE NULL
+        END AS "command",
+        CASE 
+          WHEN p.polroles = '{0}'::oid[] THEN 'PUBLIC'
+          ELSE COALESCE(
+            (SELECT string_agg(rolname, ', ') 
+             FROM pg_catalog.pg_roles 
+             WHERE oid = ANY(p.polroles)), 
+            'PUBLIC'
+          )
+        END AS "roles",
+        pg_catalog.pg_get_expr(p.polqual, p.polrelid) AS "usingExpression",
+        pg_catalog.pg_get_expr(p.polwithcheck, p.polrelid) AS "withCheckExpression"
+      FROM pg_catalog.pg_class c
+      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+      LEFT JOIN pg_catalog.pg_policy p ON p.polrelid = c.oid
+      WHERE c.relname = ${tableName}
+        AND n.nspname = ${schemaName}
+        AND c.relkind = 'r';
+    `;
+
+    return formatSuccessResponse<RLSInfo>(result, startTime);
+  } catch (err: any) {
+    return {
+      success: false,
+      error: err.message || 'Failed to retrieve row level security setup',
+      data: [],
+      meta: {
+        query: 'Internal Schema Query',
+        executionTimeMs: formatExecutionTime(startTime),
+      },
+    };
+  }
 };
