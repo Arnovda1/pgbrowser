@@ -25,9 +25,10 @@
 <Table.Root class={cn('overflow-hidden rounded-xl', className)}>
 	<Table.Header>
 		<Table.Row>
-			<Table.Head class="w-[35%]">Name</Table.Head>
-			<Table.Head class="w-[20%]">Command</Table.Head>
-			<Table.Head class="w-[45%]">Expression</Table.Head>
+			<Table.Head class="w-[28%]">Name</Table.Head>
+			<Table.Head class="w-[12%]">Command</Table.Head>
+			<Table.Head class="w-[30%]">Using</Table.Head>
+			<Table.Head class="w-[30%]">With check</Table.Head>
 		</Table.Row>
 	</Table.Header>
 	<Table.Body>
@@ -35,28 +36,38 @@
 			{@const selected = selectedRls === policy.policyName}
 
 			<Table.Row
-				class="cursor-pointer p-0! {selected ? 'border-b-0' : ''}"
+				class="cursor-pointer p-0!
+        {selected ? 'border-b-0 bg-primary text-primary-foreground hover:bg-primary/90' : ''}"
 				onclick={() => handleRowClick(policy)}
 			>
-				<Table.Cell class="font-medium">
+				<Table.Cell class="font-medium select-none">
 					{policy.policyName}
 				</Table.Cell>
-				<Table.Cell>
+				<Table.Cell class="select-none">
 					{policy.command}
 				</Table.Cell>
 				<Table.Cell>
 					{#if policy.usingExpression}
-						<div class="w-fit shrink-0 overflow-hidden rounded-xl border pr-1">
+						<div
+							class="w-full shrink-0 overflow-hidden rounded-xl border bg-card pr-1 text-foreground"
+						>
 							<ReadOnlySql code={policy.usingExpression} />
 						</div>
-					{:else}
-						<NotFound>None</NotFound>
+					{/if}
+				</Table.Cell>
+				<Table.Cell>
+					{#if policy.withCheckExpression}
+						<div
+							class="w-full shrink-0 overflow-hidden rounded-xl border bg-card pr-1 text-foreground"
+						>
+							<ReadOnlySql code={policy.withCheckExpression} />
+						</div>
 					{/if}
 				</Table.Cell>
 			</Table.Row>
 
 			{#if selected}
-				<Table.Row class="hover:bg-transparent">
+				<Table.Row class="bg-primary text-primary-foreground hover:bg-primary">
 					<Table.Cell colspan={500}>
 						<SelectedRls {policy} />
 					</Table.Cell>

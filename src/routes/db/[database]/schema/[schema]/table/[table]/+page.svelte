@@ -23,7 +23,7 @@
 			<Tabs.Trigger value="rls">RLS</Tabs.Trigger>
 		</Tabs.List>
 
-		<Button href={`/db/${database}/schema/${schema}/table/${table}/select`}>
+		<Button href={`/db/${database}/schema/${schema}/table/${table}/select`} variant="secondary">
 			<ArrowRight /> View records
 		</Button>
 	</div>
