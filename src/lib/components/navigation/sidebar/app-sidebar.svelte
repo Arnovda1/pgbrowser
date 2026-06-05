@@ -1,11 +1,18 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
+	import AlertDialog from '$lib/components/global/alert-dialog.svelte';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import db from '$lib/stores/db.svelte';
 	import type { Func } from '$lib/types';
-	import { BoxesIcon, ChevronsUpDownIcon, DatabaseIcon, UnplugIcon } from 'lucide-svelte';
+	import {
+		BoxesIcon,
+		ChevronsUpDownIcon,
+		DatabaseIcon,
+		RotateCcw,
+		UnplugIcon,
+	} from 'lucide-svelte';
 	import NotFound from '../../global/not-found.svelte';
 	import SidebarTables from './sidebar-tables.svelte';
 
@@ -101,16 +108,25 @@
 		{/if}
 	</Sidebar.Content>
 	<Sidebar.Footer>
-		<Sidebar.Menu>
-			<Sidebar.MenuItem>
-				<Sidebar.MenuButton
-					variant="outline"
-					onclick={() => {
+		<Sidebar.Menu class="flex-row gap-1">
+			<Sidebar.MenuItem class="w-full">
+				<AlertDialog
+					onContinue={() => {
 						db.disconnect();
 						goto('/connect');
 					}}
+					title="Disconnect?"
+					continueLabel="Disconnect"
+					class="w-full"
 				>
-					<UnplugIcon /> Disconnect
+					<Sidebar.MenuButton variant="outline" title="Disconnect from server">
+						<UnplugIcon /> Disconnect
+					</Sidebar.MenuButton>
+				</AlertDialog>
+			</Sidebar.MenuItem>
+			<Sidebar.MenuItem>
+				<Sidebar.MenuButton variant="outline" onclick={invalidateAll} title="Refresh">
+					<RotateCcw />
 				</Sidebar.MenuButton>
 			</Sidebar.MenuItem>
 		</Sidebar.Menu>
