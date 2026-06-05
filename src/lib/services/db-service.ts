@@ -55,6 +55,17 @@ export const checkConnection = async (
 	return res.data;
 };
 
+export const getViews = async (params: Params): Promise<string[]> => {
+	const result = await query<{ viewName: string }>(
+		params,
+		`SELECT c.relname AS "viewName" FROM pg_catalog.pg_class c JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE n.nspname = '${params.schema || 'public'}' AND c.relkind IN ('v', 'm') ORDER BY c.relname;`,
+	);
+
+	if (!result.success) throw new Error(result.error);
+
+	return result.data.map(r => r.viewName);
+};
+
 export const getTables = async (params: Params): Promise<string[]> => {
 	const result = await query<{ tableName: string }>(
 		params,

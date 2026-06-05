@@ -11,6 +11,7 @@
 		TableIcon,
 		TerminalSquareIcon,
 		TextAlignJustifyIcon,
+		ViewIcon,
 		ZapIcon,
 	} from 'lucide-svelte';
 	import PostgresIcon from '../postgres-icon.svelte';
@@ -21,19 +22,21 @@
 
 	let {
 		databases,
+		views,
 		tables,
 		schemas,
 		funcs,
 		triggers,
 	}: {
 		databases: string[];
+		views: string[];
 		tables: string[];
 		schemas: string[];
 		funcs: Func[];
 		triggers: Trigger[];
 	} = $props();
 
-	const { database, schema, table, functionName, triggerName } = $derived(page.params);
+	const { database, schema, view, table, functionName, triggerName } = $derived(page.params);
 
 	const segments = $derived(
 		(
@@ -57,6 +60,16 @@
 					items: schemas,
 					getLabel: (s: string) => s,
 					getHref: (s: string) => `/db/${database}/schema/${s}`,
+				},
+				{
+					visible: !!view,
+					label: view,
+					icon: ViewIcon,
+					href: `/db/${database}/view/${view}`,
+					dropdownLabel: 'Views',
+					items: views,
+					getLabel: (v: string) => v,
+					getHref: (v: string) => `/db/${database}/schema/${schema}/view/${v}`,
 				},
 				{
 					visible: !!table,
