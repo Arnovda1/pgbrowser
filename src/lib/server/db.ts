@@ -23,33 +23,19 @@ import getPgTypeName from '$lib/util/pg-type-map';
 import postgres, { type Sql } from 'postgres';
 
 const dbClients = new Map<string, Sql>();
-const dbTimeouts = new Map<string, Timer>();
-
-const IDLE_TIMEOUT_MS = 2 * 60 * 1000;
 
 const getClient = (dbUrl: string): Sql => {
-	if (dbTimeouts.has(dbUrl)) {
-		clearTimeout(dbTimeouts.get(dbUrl)!);
-	}
+  let client = dbClients.get(dbUrl);
 
-	if (!dbClients.has(dbUrl)) {
-		const client = postgres(dbUrl, { max: 1 });
-		dbClients.set(dbUrl, client);
-	}
+  if (!client) {
+    client = postgres(dbUrl, { 
+      max: 1, // required for transactions
+      idle_timeout: 120,
+    });
+    dbClients.set(dbUrl, client);
+  }
 
-	const timeoutId = setTimeout(() => {
-		const client = dbClients.get(dbUrl);
-		if (client) {
-			client.end();
-			dbClients.delete(dbUrl);
-			dbTimeouts.delete(dbUrl);
-			console.log('Closed database connection.');
-		}
-	}, IDLE_TIMEOUT_MS);
-
-	dbTimeouts.set(dbUrl, timeoutId);
-
-	return dbClients.get(dbUrl)!;
+  return client;
 };
 
 const formatExecutionTime = (startTime: number): number => {
