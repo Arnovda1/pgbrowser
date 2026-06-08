@@ -12,9 +12,16 @@
 	let { data } = $props();
 
 	const { database, schema, table } = $derived(page.params);
+
+	let tab = $state<string>(page.url.searchParams.get('tab') || 'structure');
+
+	$effect(() => {
+		const currentUrlTab = page.url.searchParams.get('tab');
+		if (currentUrlTab) tab = currentUrlTab;
+	});
 </script>
 
-<Tabs.Root value="structure">
+<Tabs.Root bind:value={tab}>
 	<div class="flex justify-between">
 		<Tabs.List>
 			<Tabs.Trigger value="structure">Table structure</Tabs.Trigger>

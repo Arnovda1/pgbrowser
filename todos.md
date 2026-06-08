@@ -4,8 +4,8 @@
 
 - [ ] **Identifier Escaping**: Currently, table and schema names with spaces, special characters, or reserved words (like `user`, `order`, `group`) will cause queries to fail because they aren't wrapped in double quotes in `db-service.ts`.
 - [ ] **Incomplete Multi-statement Results**: `executeQuery` in `db.ts` only returns the metadata and data for the _last_ statement in a multi-statement query. Users should ideally see results for all executed statements.
-- [ ] **Record Table Order**: `records-table.svelte` iterates over `Object.entries(record)`, which doesn't guarantee the columns will appear in the order defined by the database. It should iterate over `result.meta.columns` instead.
-- [ ] **Redundant Connection Closing**: Manual `client.end()` in `db.ts` might be fighting against the `postgres` library's built-in connection pooling. Consider letting the library manage the pool lifecycle.
+- [x] **Record Table Order**: `records-table.svelte` iterates over `Object.entries(record)`, which doesn't guarantee the columns will appear in the order defined by the database. It should iterate over `result.meta.columns` instead.
+- [x] **Redundant Connection Closing**: Manual `client.end()` in `db.ts` might be fighting against the `postgres` library's built-in connection pooling. Consider letting the library manage the pool lifecycle.
 
 ## Postgres-specific Features
 
@@ -28,22 +28,22 @@
 
 ## Old todos
 
-- [~] **Pagination**: Add `LIMIT` and `OFFSET` to the records view to handle large tables.
 - [ ] **Sorting**: Click column headers to sort records (`ORDER BY`).
 - [ ] **Quick Filter**: A search bar to filter records by any column value.
 - [ ] **Foreign Key Navigation**: Detect FKs and make them clickable to jump to the related record.
 - [ ] **Export Data**: Download results as CSV, JSON, or SQL dump.
-- [x] **JSON Viewer**: Pretty-print JSON columns in the table cells.
-- [x] **Intellisense**: Enhance CodeMirror with autocomplete for tables and columns from the current schema.
-- [ ] **Query Formatting**: "Beautify SQL" button in the editor.
 - [ ] **Execution Plan**: "Explain" button to show the database execution plan.
 - [ ] **Schema Designer**: UI to create tables, add columns, and define constraints.
 - [ ] **Database/User Management**: Tools to manage DB users and permissions.
 - [ ] **ER Diagram**: Visual representation of the database schema relationships.
+- [ ] **Fix showing proper enums**
+- [x] **Pagination**: Add `LIMIT` and `OFFSET` to the records view to handle large tables.
+- [x] **JSON Viewer**: Pretty-print JSON columns in the table cells.
+- [x] **Intellisense**: Enhance CodeMirror with autocomplete for tables and columns from the current schema.
+- [x] **Query Formatting**: "Beautify SQL" button in the editor.
 - [x] **Better Connection Management**: The current idle timeout mechanism in `db.ts` works but could be more robust (e.g., pooling).
 - [x] **Global Error Handler**: Standardize how DB errors are returned to the frontend for better UI notifications.
 - [x] **Sticky Headers**: Ensure table headers stay at the top when scrolling through long datasets.
 - [x] **NULL Visibility**: Explicitly style `NULL` values so they are distinguishable from empty strings.
 - [x] **URL Encoding**: Double check that complex connection strings (with special chars in passwords) are handled correctly in `db-url.ts`.
 - [x] **Type Handling**: Ensure `bytea`, `uuid`, and other Postgres-specific types are displayed correctly in the UI.
-- [ ] **Fix showing proper enums**
