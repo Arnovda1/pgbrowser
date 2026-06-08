@@ -1,5 +1,5 @@
 export const formatDate = (date: Date | string): string => {
-	return new Intl.DateTimeFormat('en-US', {
+	return new Intl.DateTimeFormat('en-UK', {
 		month: 'short',
 		day: 'numeric',
 		hour: 'numeric',
@@ -9,7 +9,7 @@ export const formatDate = (date: Date | string): string => {
 	}).format(new Date(date));
 };
 
-export function formatIfDate(value: any): string {
+export function formatIfDate(value: unknown): string {
 	if (typeof value !== 'string' || value.trim() === '' || !isNaN(Number(value))) {
 		return String(value);
 	}

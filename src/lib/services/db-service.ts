@@ -21,6 +21,7 @@ import type {
 	Trigger,
 	TriggerQueryResult,
 } from '$lib/types';
+import { oneLineQuery } from '$lib/util/db-helpers';
 import apiClient from './api-client';
 
 interface Params {
@@ -39,7 +40,7 @@ const encodedDbUrl = (params: Params): string | undefined => {
 
 export const query = async <T>(params: Params, query: string): Promise<DbResponse<T>> => {
 	const res = await apiClient.post(`/api/query?db=${encodedDbUrl(params)}`, {
-		query,
+		query: oneLineQuery(query),
 	});
 
 	return res.data;

@@ -1,21 +1,12 @@
 import type { DbConnection } from '$lib/types';
 
-const createDbUrl = (
+export const createDbUrl = (
 	config: DbConnection,
 	database?: string,
 	schema: string = 'public',
 ): string => {
-	// if (config.type === 'sqlite') {
-	// 	return config.filePath;
-	// }
-
-	let protocol = `${config.type}://`;
-
-	// if (config.type === 'mongodb' && config.host.includes('.mongodb.net')) {
-	// 	protocol = 'mongodb+srv://';
-	// }
-
-	let url: URL = new URL(`${protocol}${config.host}`);
+	const protocol = `${config.type}://`;
+	const url: URL = new URL(`${protocol}${config.host}`);
 
 	url.username = config.username;
 	if (config.password) url.password = config.password;
@@ -35,4 +26,7 @@ const createDbUrl = (
 	return url.toString();
 };
 
-export default createDbUrl;
+
+export const oneLineQuery = (str: string): string => {
+  return str.split('\n').map(l => l.trim()).filter(Boolean).join(' ');
+}

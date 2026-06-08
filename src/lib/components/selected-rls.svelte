@@ -3,7 +3,6 @@
 	import { page } from '$app/state';
 	import { query } from '$lib/services/db-service';
 	import type { RLSInfo } from '$lib/types';
-	import { oneLine } from '$lib/util/functions';
 	import { EditorView } from 'codemirror';
 	import { PencilIcon, TrashIcon } from 'lucide-svelte';
 	import AlertDialog from './global/alert-dialog.svelte';
@@ -33,7 +32,8 @@
 			const usingClause = code ? `USING (${code})` : '';
 			const withCheckClause = withCheckCode ? `WITH CHECK (${withCheckCode})` : '';
 
-			const sqlCommand = oneLine(`
+			const result = await query(
+				page.params, `
         BEGIN;
           DROP POLICY "${policy.policyName}" ON "${schema}"."${table}";
           
@@ -44,8 +44,6 @@
           ${withCheckClause};
         COMMIT;
       `);
-
-			const result = await query(page.params, sqlCommand);
 
 			if (result.error) {
 				error = result.error;
@@ -64,7 +62,7 @@
 
 			const result = await query(
 				page.params,
-				oneLine(`DROP POLICY "${policy.policyName}" ON "${schema}"."${table}"`),
+				`DROP POLICY "${policy.policyName}" ON "${schema}"."${table}"`,
 			);
 
 			if (result.error) {

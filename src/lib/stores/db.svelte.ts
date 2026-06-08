@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import type { DbConnection } from '$lib/types';
-import createDbUrl from '$lib/util/db-url';
+import { createDbUrl } from '$lib/util/db-helpers';
 import { queryHistory } from './query-history.svelte';
 
 class Db {
