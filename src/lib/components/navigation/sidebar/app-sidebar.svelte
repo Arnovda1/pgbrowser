@@ -6,14 +6,9 @@
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import db from '$lib/stores/db.svelte';
 	import type { Func } from '$lib/types';
-	import {
-		BoxesIcon,
-		ChevronsUpDownIcon,
-		DatabaseIcon,
-		RotateCcw,
-		UnplugIcon,
-	} from 'lucide-svelte';
+	import { ChevronsUpDownIcon, DatabaseIcon, RotateCcw, UnplugIcon } from 'lucide-svelte';
 	import NotFound from '../../global/not-found.svelte';
+	import SidebarSchemas from './sidebar-schemas.svelte';
 	import SidebarTables from './sidebar-tables.svelte';
 
 	let {
@@ -87,24 +82,7 @@
 			<SidebarTables {tables} />
 		{:else}
 			<!-- show schemas if none selected -->
-			<Sidebar.Group>
-				<Sidebar.GroupLabel>Schemas</Sidebar.GroupLabel>
-				<Sidebar.GroupContent>
-					<Sidebar.Menu>
-						{#each schemas as s}
-							<Sidebar.MenuItem>
-								<Sidebar.MenuButton
-									isActive={s === schema}
-									onclick={() => goto(`/db/${database}/schema/${s}`)}
-								>
-									<BoxesIcon />
-									{s}
-								</Sidebar.MenuButton>
-							</Sidebar.MenuItem>
-						{/each}
-					</Sidebar.Menu>
-				</Sidebar.GroupContent>
-			</Sidebar.Group>
+			<SidebarSchemas {schemas} />
 		{/if}
 	</Sidebar.Content>
 	<Sidebar.Footer>
