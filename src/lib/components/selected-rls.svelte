@@ -108,7 +108,7 @@
 				<span class="px-1 text-xs font-medium text-muted-foreground select-none"
 					>Using (SELECT/UPDATE/DELETE)</span
 				>
-				<SqlEditor bind:code bind:view />
+				<SqlEditor bind:code bind:view class="text-foreground" />
 			</div>
 		{/if}
 
@@ -117,7 +117,7 @@
 				<span class="px-1 text-xs font-medium text-muted-foreground select-none"
 					>With check (INSERT/UPDATE)</span
 				>
-				<SqlEditor bind:code={withCheckCode} bind:view={withCheckView} />
+				<SqlEditor bind:code={withCheckCode} bind:view={withCheckView} class="text-foreground" />
 			</div>
 		{/if}
 	</div>

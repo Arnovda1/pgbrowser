@@ -2,7 +2,6 @@
 	import * as Table from '$lib/components/ui/table';
 	import type { RLSInfo } from '$lib/types';
 	import { cn } from 'tailwind-variants';
-	import NotFound from '../global/not-found.svelte';
 	import ReadOnlySql from '../query/read-only-sql.svelte';
 	import SelectedRls from '../selected-rls.svelte';
 
