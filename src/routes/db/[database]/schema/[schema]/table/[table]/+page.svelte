@@ -22,7 +22,7 @@
 </script>
 
 <Tabs.Root bind:value={tab}>
-	<div class="flex justify-between">
+	<div class="flex justify-between gap-1.5">
 		<Tabs.List>
 			<Tabs.Trigger value="structure">Table structure</Tabs.Trigger>
 			<Tabs.Trigger value="metadata">Metadata</Tabs.Trigger>

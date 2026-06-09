@@ -5,7 +5,11 @@
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import {
 		ChevronDownIcon,
-		FunctionSquareIcon
+		FunctionSquareIcon,
+		NetworkIcon,
+		TableIcon,
+		ViewIcon,
+		ZapIcon
 	} from 'lucide-svelte';
 
 	const sidebar = Sidebar.useSidebar();
@@ -31,9 +35,41 @@
           <Sidebar.MenuItem onclick={() => sidebar.setOpenMobile(false)}>
             <Sidebar.MenuButton
               class="border-r-8 border-sidebar/1"
+              onclick={() => goto(`/db/${database}/schema/${schema}?tab=tables`)}
+            >
+              <TableIcon /> Tables
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem onclick={() => sidebar.setOpenMobile(false)}>
+            <Sidebar.MenuButton
+              class="border-r-8 border-sidebar/1"
+              onclick={() => goto(`/db/${database}/schema/${schema}?tab=views`)}
+            >
+              <ViewIcon /> Views
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem onclick={() => sidebar.setOpenMobile(false)}>
+            <Sidebar.MenuButton
+              class="border-r-8 border-sidebar/1"
               onclick={() => goto(`/db/${database}/schema/${schema}?tab=routines`)}
             >
               <FunctionSquareIcon /> Routines
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem onclick={() => sidebar.setOpenMobile(false)}>
+            <Sidebar.MenuButton
+              class="border-r-8 border-sidebar/1"
+              onclick={() => goto(`/db/${database}/schema/${schema}?tab=triggers`)}
+            >
+              <ZapIcon /> Triggers
+            </Sidebar.MenuButton>
+          </Sidebar.MenuItem>
+          <Sidebar.MenuItem onclick={() => sidebar.setOpenMobile(false)}>
+            <Sidebar.MenuButton
+              class="border-r-8 border-sidebar/1"
+              onclick={() => goto(`/db/${database}/schema/${schema}?tab=erd`)}
+            >
+              <NetworkIcon /> ER Diagram
             </Sidebar.MenuButton>
           </Sidebar.MenuItem>
 				</Sidebar.Menu>

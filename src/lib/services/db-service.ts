@@ -147,7 +147,7 @@ export const getRoutineDetails = async (
 	params: Params & { routineName: string },
 ): Promise<RoutineDetails[]> => {
 	const { data: result } = await apiClient.get<RoutineDetailsQueryResult>(
-		`/api/schemas/${params.schema}/routines/function-name/${params.routineName}?db=${encodedDbUrl(params)}`,
+		`/api/schemas/${params.schema}/routines/${params.routineName}?db=${encodedDbUrl(params)}`,
 	);
 
 	if (!result.success) throw new Error(result.error);
