@@ -2,23 +2,23 @@
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { query } from '$lib/services/db-service';
-	import type { FuncDetails } from '$lib/types';
+	import type { RoutineDetails } from '$lib/types';
 	import beautifySql from '$lib/util/sql-beautify';
 	import type { EditorView } from 'codemirror';
 	import { CodeIcon, PenIcon, RotateCcwIcon, TrashIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
-	import FunctionExecutor from './function-executor.svelte';
 	import AlertDialog from './global/alert-dialog.svelte';
 	import Error from './global/error.svelte';
 	import Success from './global/success.svelte';
 	import SqlEditor from './query/sql-editor.svelte';
+	import RoutineExecutor from './routine-executor.svelte';
 	import Badge from './ui/badge/badge.svelte';
 	import { Button } from './ui/button';
 
 	let {
-		func,
+		routine,
 	}: {
-		func: FuncDetails;
+		routine: RoutineDetails;
 	} = $props();
 
 	let code = $state<string | undefined>(undefined);
@@ -28,7 +28,7 @@
 	let status = $state<string>('');
 	let loading = $state(false);
 
-	const updateFunction = async () => {
+	const updateRoutine = async () => {
 		if (!code) return;
 		error = '';
 		status = '';
@@ -40,7 +40,9 @@
 			if (result.error) {
 				error = result.error;
 			} else {
-				status = 'Function updated';
+				if (routine.routineType === 'FUNCTION') status = 'Function updated';
+				else status = 'Procedure updated';
+
 				await invalidateAll();
 			}
 		} catch (err: any) {
@@ -50,7 +52,7 @@
 		}
 	};
 
-	const deleteFunction = async () => {
+	const deleteRoutine = async () => {
 		error = '';
 		status = '';
 		loading = true;
@@ -58,7 +60,7 @@
 		try {
 			const result = await query(
 				page.params,
-				`DO $$ BEGIN EXECUTE 'DROP FUNCTION ' || ${func.oid}::regprocedure::text; END $$;`,
+				`DROP ${routine.routineType} ${routine.oid}::regprocedure;`,
 			);
 
 			if (result.error) {
@@ -73,12 +75,12 @@
 		}
 	};
 
-	const resetFunction = () => {
-		code = func.body;
+	const resetRoutine = () => {
+		code = routine.body;
 	};
 
 	$effect(() => {
-		if (func.oid) code = func.body;
+		if (routine.oid) code = routine.body;
 	});
 
 	$effect(() => {
@@ -99,7 +101,7 @@
 	<div class="flex justify-between">
 		<!-- buttons -->
 		<div class="flex gap-1.5">
-			<Button onclick={updateFunction} variant="secondary" disabled={loading}>
+			<Button onclick={updateRoutine} variant="secondary" disabled={loading}>
 				<PenIcon /> Update
 			</Button>
 
@@ -107,24 +109,24 @@
 				<CodeIcon /> Beautify
 			</Button>
 
-			<Button onclick={resetFunction} variant="secondary" disabled={loading}>
+			<Button onclick={resetRoutine} variant="secondary" disabled={loading}>
 				<RotateCcwIcon /> Reset
 			</Button>
 
-			<AlertDialog onContinue={deleteFunction} title="Delete function?" continueLabel="Delete">
-				<Button variant="destructive" title="Delete function" disabled={loading}>
+			<AlertDialog onContinue={deleteRoutine} title="Delete {routine.routineType.toLowerCase()}?" continueLabel="Delete">
+				<Button variant="destructive" title="Delete {routine.routineType.toLowerCase()}" disabled={loading}>
 					<TrashIcon /> Delete
 				</Button>
 			</AlertDialog>
 		</div>
 
-		<!-- function details -->
+		<!-- routine details -->
 		<div class="flex items-center gap-1.5">
 			<Badge variant="secondary">
-				{func.behaviorType}
+				{routine.behaviorType}
 			</Badge>
 			<Badge variant="secondary">
-				{func.language}
+				{routine.language}
 			</Badge>
 		</div>
 	</div>
@@ -134,8 +136,8 @@
 		<SqlEditor bind:code bind:view class="max-h-96" />
 	{/if}
 
-	<!-- run function -->
-	<FunctionExecutor {func} />
+	<!-- run routine -->
+	<RoutineExecutor {routine} />
 
 	<Error {error} class="my-0" />
 	<Success message={status} class="my-0" />

@@ -27,8 +27,9 @@ export type Column = {
 
 export type Row = Record<string, unknown>;
 
-export type Func = {
+export type Routine = {
 	name: string;
+	routineType: 'FUNCTION' | 'PROCEDURE';
 	returnType: 'trigger' | 'void' | 'boolean' | 'bigint' | 'record' | string;
 };
 
@@ -41,9 +42,10 @@ export interface Trigger {
 	isEnabled: boolean;
 }
 
-export type FuncDetails = {
+export type RoutineDetails = {
 	oid: number;
 	name: string;
+	routineType: 'FUNCTION' | 'PROCEDURE';
 	language: string;
 	returnType: string;
 	argumentSignature: string;
@@ -107,20 +109,20 @@ export type DbResponse<T> =
 	  };
 
 export type RLSInfo = {
-  isRlsEnabled: boolean;
-  isRlsForced: boolean;
-  policyName: string | null;
-  command: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'ALL' | null;
-  roles: string | null;
-  usingExpression: string | null;
-  withCheckExpression: string | null;
+	isRlsEnabled: boolean;
+	isRlsForced: boolean;
+	policyName: string | null;
+	command: 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE' | 'ALL' | null;
+	roles: string | null;
+	usingExpression: string | null;
+	withCheckExpression: string | null;
 };
 
 export type TableSizeMetricsQueryResult = DbResponse<TableSizeMetrics>;
 export type QueryResult = DbResponse<unknown>;
 export type ColumnQueryResult = DbResponse<Column>;
-export type FuncQueryResult = DbResponse<Func>;
-export type FuncDetailsQueryResult = DbResponse<FuncDetails>;
+export type RoutineQueryResult = DbResponse<Routine>;
+export type RoutineDetailsQueryResult = DbResponse<RoutineDetails>;
 export type TriggerQueryResult = DbResponse<Trigger>;
 export type CheckConstraintQueryResult = DbResponse<CheckConstraint>;
 export type ForeignKeyQueryResult = DbResponse<ForeignKey>;

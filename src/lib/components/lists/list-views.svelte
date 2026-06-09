@@ -13,7 +13,7 @@
 		class?: string;
 	} = $props();
 
-	const { database, schema, view } = $derived(page.params);
+	const { database, schema } = $derived(page.params);
 </script>
 
 <div class={cn('grid w-full gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4', className)}>

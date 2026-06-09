@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { getAllColumns } from '$lib/services/db-service';
-	import type { Func, Trigger } from '$lib/types';
+	import type { Routine, Trigger } from '$lib/types';
 	import computeErdLayout from '$lib/util/erd-layout';
 	import { Anchor, Node, Svelvet } from 'svelvet';
 
@@ -10,14 +10,14 @@
 		views,
 		tables,
 		schemas,
-		funcs,
+		routines,
 		triggers,
 	}: {
 		databases: string[];
 		views: string[];
 		tables: string[];
 		schemas: string[];
-		funcs: Func[];
+		routines: Routine[];
 		triggers: Trigger[];
 	} = $props();
 

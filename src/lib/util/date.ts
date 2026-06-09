@@ -9,7 +9,7 @@ export const formatDate = (date: Date | string): string => {
 	}).format(new Date(date));
 };
 
-export function formatIfDate(value: unknown): string {
+export const formatIfDate = (value: unknown): string => {
 	if (typeof value !== 'string' || value.trim() === '' || !isNaN(Number(value))) {
 		return String(value);
 	}
@@ -31,4 +31,4 @@ export function formatIfDate(value: unknown): string {
 		dateStyle: 'medium',
 		timeStyle: value.includes(':') ? 'short' : undefined,
 	}).format(date);
-}
+};

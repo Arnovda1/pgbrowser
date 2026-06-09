@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
 	import db from '$lib/stores/db.svelte';
-	import type { Func, Trigger } from '$lib/types';
+	import type { Routine, Trigger } from '$lib/types';
 	import {
 		BoxesIcon,
 		DatabaseIcon,
@@ -25,18 +25,18 @@
 		views,
 		tables,
 		schemas,
-		funcs,
+		routines,
 		triggers,
 	}: {
 		databases: string[];
 		views: string[];
 		tables: string[];
 		schemas: string[];
-		funcs: Func[];
+		routines: Routine[];
 		triggers: Trigger[];
 	} = $props();
 
-	const { database, schema, view, table, functionName, triggerName } = $derived(page.params);
+	const { database, schema, view, table, routineName, triggerName } = $derived(page.params);
 
 	const segments = $derived(
 		(
@@ -82,14 +82,14 @@
 					getHref: (t: string) => `/db/${database}/schema/${schema}/table/${t}`,
 				},
 				{
-					visible: !!functionName,
-					label: functionName,
+					visible: !!routineName,
+					label: routineName,
 					icon: FunctionSquareIcon,
 					href: null,
 					dropdownLabel: 'Functions',
-					items: funcs,
-					getLabel: (f: Func) => f.name,
-					getHref: (f: Func) => `/db/${database}/schema/${schema}/func/${f.name}`,
+					items: routines,
+					getLabel: (r: Routine) => r.name,
+					getHref: (r: Routine) => `/db/${database}/schema/${schema}/routine/${r.name}`,
 				},
 				{
 					visible: !!triggerName,
@@ -118,7 +118,6 @@
 				<Breadcrumb.Link class="flex items-center gap-1.5">
 					<Button variant="ghost">
 						<PostgresIcon />
-						<!-- <img src={postgres} alt='' class="size-5 grayscale" /> -->
 						{' '}{db.connection.host}:{db.connection.port}
 					</Button>
 				</Breadcrumb.Link>
@@ -127,108 +126,6 @@
 			{#each segments as segment}
 				<BreadcrumbSegment {...segment} />
 			{/each}
-
-			<!-- {#if database}
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <HoverCard.Root openDelay={300} closeDelay={0}>
-            <HoverCard.Trigger>
-              <Button href={`/db/${database}`} class="flex items-center gap-1.5" variant="ghost">
-                <DatabaseIcon /> {database}
-              </Button>
-            </HoverCard.Trigger>
-            <HoverCard.Content class='max-h-[70vh] overflow-y-auto'>
-              {#each databases as d}
-                <Button variant='secondary' class='w-full' onclick={() => goto(`/db/${d}`)}>
-                  {d}
-                </Button>
-              {/each}
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Breadcrumb.Item>
-      {/if} -->
-
-			<!-- should make these a hover popover, so clicking still returns it to the current schema / func / table -->
-
-			<!-- {#if schema}
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <HoverCard.Root openDelay={300} closeDelay={0}>
-            <HoverCard.Trigger>
-              <Button variant='ghost' href={`/db/${database}/schema/${schema}`}>
-                <BoxesIcon /> {schema}
-              </Button>
-            </HoverCard.Trigger>
-            <HoverCard.Content class='max-h-[70vh] overflow-y-auto'>
-              {#each schemas as s}
-                <Button variant='secondary' class='w-full' onclick={() => goto(`/db/${database}/schema/${s}`)}>
-                  {s}
-                </Button>
-              {/each}
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Breadcrumb.Item>
-      {/if}
-      
-      {#if table}
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <HoverCard.Root openDelay={300} closeDelay={0}>
-            <HoverCard.Trigger>
-              <Button variant="ghost" href={`/db/${database}/schema/${schema}/table/${table}`}>
-                <TableIcon /> {table}
-              </Button>
-            </HoverCard.Trigger>
-            <HoverCard.Content class='max-h-[70vh] overflow-y-auto'>
-              {#each tables as t}
-                <Button variant='secondary' class='w-full' onclick={() => goto(`/db/${database}/schema/${schema}/table/${t}`)}>
-                  {t}
-                </Button>
-              {/each}
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Breadcrumb.Item>
-      {/if}
-
-      {#if functionName}
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <HoverCard.Root openDelay={300} closeDelay={0}>
-            <HoverCard.Trigger>
-              <Button variant="ghost">
-                <FunctionSquareIcon /> {functionName}
-              </Button>
-            </HoverCard.Trigger>
-            <HoverCard.Content class='max-h-[70vh] overflow-y-auto'>
-              {#each funcs as f}
-                <Button variant='secondary' class='w-full' onclick={() => goto(`/db/${database}/schema/${schema}/func/${f.functionName}`)}>
-                  {f.functionName}
-                </Button>
-              {/each}
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Breadcrumb.Item>
-      {/if}
-
-      {#if triggerName}
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-          <HoverCard.Root openDelay={300} closeDelay={0}>
-            <HoverCard.Trigger>
-              <Button variant="ghost">
-                <ZapIcon /> {triggerName}
-              </Button>
-            </HoverCard.Trigger>
-            <HoverCard.Content class='max-h-[70vh] overflow-y-auto'>
-              {#each triggers.filter(t => t.tableName === table) as t}
-                <Button variant='secondary' class='w-full' onclick={() => goto(`/db/${database}/schema/${schema}/table/${table}/trigger/${t.triggerName}`)}>
-                  {t.triggerName}
-                </Button>
-              {/each}
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Breadcrumb.Item>
-      {/if} -->
 
 			{#if page.url.pathname === `/db/${database}/schema/${schema}/query`}
 				<BreadcrumbSeparator />

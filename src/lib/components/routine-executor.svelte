@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { query } from '$lib/services/db-service';
-	import type { FuncDetails, QueryResult } from '$lib/types';
-	import { cleanFunctionSignature } from '$lib/util/functions';
+	import type { QueryResult, RoutineDetails } from '$lib/types';
+	import { cleanRoutinesSignature } from '$lib/util/routines';
 	import type { EditorView } from 'codemirror';
 	import { PlayIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
@@ -13,9 +13,9 @@
 	import { Button } from './ui/button';
 
 	let {
-		func,
+		routine,
 	}: {
-		func: FuncDetails;
+		routine: RoutineDetails;
 	} = $props();
 
 	let code = $state<string>('');
@@ -25,7 +25,7 @@
 	let error = $state<string>('');
 	let loading = $state(false);
 
-	const executeFunction = async () => {
+	const executeRoutine = async () => {
 		if (!code) return;
 		error = '';
 		loading = true;
@@ -41,14 +41,15 @@
 	};
 
 	$effect(() => {
-		if (!func.name) return;
+		if (!routine.name) return;
 
-		const args = cleanFunctionSignature(func.argumentSignature);
+		const args = cleanRoutinesSignature(routine.argumentSignature);
+		const callString = routine.routineType === 'PROCEDURE' ? 'CALL' : 'SELECT';
 
 		if (args) {
-			code = `SELECT ${func.name}(/* ${args} */);`;
+			code = `${callString} ${routine.name}(/* ${args} */);`;
 		} else {
-			code = `SELECT ${func.name}();`;
+			code = `${callString} ${routine.name}();`;
 		}
 	});
 
@@ -59,7 +60,7 @@
 </script>
 
 <div class="flex h-fit max-h-18 w-full gap-2">
-	<Button onclick={executeFunction} size="sm" disabled={!code || loading}>
+	<Button onclick={executeRoutine} size="sm" disabled={!code || loading}>
 		<PlayIcon /> Run
 	</Button>
 	<div class="my-auto h-fit w-full">

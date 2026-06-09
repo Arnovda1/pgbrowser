@@ -5,27 +5,31 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Sidebar from '$lib/components/ui/sidebar';
 	import db from '$lib/stores/db.svelte';
-	import type { Func } from '$lib/types';
+	import type { Routine } from '$lib/types';
 	import { ChevronsUpDownIcon, DatabaseIcon, RotateCcw, UnplugIcon } from 'lucide-svelte';
 	import NotFound from '../../global/not-found.svelte';
+	import SidebarSchemaTabs from './sidebar-schema-tabs.svelte';
 	import SidebarSchemas from './sidebar-schemas.svelte';
 	import SidebarTables from './sidebar-tables.svelte';
+	import SidebarViews from './sidebar-views.svelte';
 
 	let {
+		views,
 		tables,
 		schemas,
 		databases,
-		funcs,
+		routines,
 	}: {
+		views: string[];
 		tables: string[];
 		schemas: string[];
 		databases: string[];
-		funcs: Func[];
+		routines: Routine[];
 	} = $props();
 
 	const sidebar = Sidebar.useSidebar();
 
-	const { database, schema, table, functionName } = $derived(page.params);
+	const { database, schema } = $derived(page.params);
 
 	const closeMobile = () => {
 		sidebar.setOpenMobile(false);
@@ -78,8 +82,12 @@
 		<!-- tables + functions or schemas -->
 
 		{#if schema}
-			<!-- show tables if schema selected -->
+			<!-- show schema tabs -->
+			<SidebarSchemaTabs />
+
+			<!-- show tables and views if schema selected -->
 			<SidebarTables {tables} />
+			<SidebarViews {views} />
 		{:else}
 			<!-- show schemas if none selected -->
 			<SidebarSchemas {schemas} />

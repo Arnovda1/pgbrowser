@@ -1,13 +1,13 @@
 import {
 	getAllColumns,
 	getDatabases,
-	getFunctions,
+	getRoutines,
 	getSchemas,
 	getTables,
 	getTriggers,
 	getViews,
 } from '$lib/services/db-service';
-import type { Func, Trigger } from '$lib/types';
+import type { Routine, Trigger } from '$lib/types';
 
 export const load = async ({ params }) => {
 	const { schema } = params;
@@ -16,7 +16,7 @@ export const load = async ({ params }) => {
 	let tables: string[] = [];
 	let databases: string[] = [];
 	let schemas: string[] = [];
-	let funcs: Func[] = [];
+	let routines: Routine[] = [];
 	let triggers: Trigger[] = [];
 	let columns: { tableName: string; columnName: string }[] = [];
 
@@ -24,7 +24,7 @@ export const load = async ({ params }) => {
 		if (schema) {
 			views = await getViews(params);
 			tables = await getTables(params);
-			funcs = await getFunctions(params);
+			routines = await getRoutines(params);
 			triggers = await getTriggers(params);
 			columns = await getAllColumns(params);
 		}
@@ -33,5 +33,5 @@ export const load = async ({ params }) => {
 		databases = await getDatabases(params);
 	} catch {}
 
-	return { views, tables, schemas, databases, funcs, triggers, columns };
+	return { views, tables, schemas, databases, routines, triggers, columns };
 };

@@ -11,6 +11,10 @@ pgbrowser is a web based PostgreSQL browser built with Svelte 5 and Bun. It prov
 * Data Viewer: Browse table records with support for JSON pretty-printing and null value visualization.
 * Metrics: View schema and table size metrics.
 
+## Roadmap
+
+See [todos.md](./todos.md) for the full list of planned features, performance improvements, and known issues.
+
 ## Screenshots
 
 ## Tech Stack

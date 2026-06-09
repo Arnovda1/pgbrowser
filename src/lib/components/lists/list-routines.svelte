@@ -1,32 +1,32 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { Func } from '$lib/types';
+	import type { Routine } from '$lib/types';
 	import { ChevronRightIcon, FunctionSquareIcon } from 'lucide-svelte';
 	import { cn } from 'tailwind-variants';
 	import NotFound from '../global/not-found.svelte';
 	import * as Item from '../ui/item';
 
 	let {
-		functions,
+		routines,
 		class: className = '',
 	}: {
-		functions: Func[];
+		routines: Routine[];
 		class?: string;
 	} = $props();
 
-	const { database, schema, table } = $derived(page.params);
+	const { database, schema } = $derived(page.params);
 </script>
 
 <div class={cn('grid w-full gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4', className)}>
-	{#each functions as func}
-		<Item.Root variant="muted" title={func.name}>
+	{#each routines as routine}
+		<Item.Root variant="muted" title={routine.name}>
 			{#snippet child({ props })}
-				<a href={`/db/${database}/schema/${schema}/func/${func.name}`} {...props}>
+				<a href={`/db/${database}/schema/${schema}/routine/${routine.name}`} {...props}>
 					<Item.Media>
 						<FunctionSquareIcon class="size-5" />
 					</Item.Media>
 					<Item.Content class="min-w-0">
-						<Item.Title class="w-full truncate!">{func.name}</Item.Title>
+						<Item.Title class="w-full truncate!">{routine.name}</Item.Title>
 					</Item.Content>
 					<Item.Actions>
 						<ChevronRightIcon class="size-4" />
@@ -35,6 +35,6 @@
 			{/snippet}
 		</Item.Root>
 	{:else}
-		<NotFound>No functions</NotFound>
+		<NotFound>No functions or procedures</NotFound>
 	{/each}
 </div>

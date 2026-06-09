@@ -6,13 +6,13 @@ import type {
 	DbResponse,
 	ForeignKey,
 	ForeignKeyQueryResult,
-	Func,
-	FuncDetails,
-	FuncDetailsQueryResult,
-	FuncQueryResult,
 	QueryResult,
 	RLSInfo,
 	RLSQueryResult,
+	Routine,
+	RoutineDetails,
+	RoutineDetailsQueryResult,
+	RoutineQueryResult,
 	TableIndex,
 	TableIndexQueryResult,
 	TableSizeMetrics,
@@ -25,17 +25,17 @@ import postgres, { type Sql } from 'postgres';
 const dbClients = new Map<string, Sql>();
 
 const getClient = (dbUrl: string): Sql => {
-  let client = dbClients.get(dbUrl);
+	let client = dbClients.get(dbUrl);
 
-  if (!client) {
-    client = postgres(dbUrl, { 
-      max: 1, // required for transactions
-      idle_timeout: 120,
-    });
-    dbClients.set(dbUrl, client);
-  }
+	if (!client) {
+		client = postgres(dbUrl, {
+			max: 1, // required for transactions
+			idle_timeout: 120,
+		});
+		dbClients.set(dbUrl, client);
+	}
 
-  return client;
+	return client;
 };
 
 const formatExecutionTime = (startTime: number): number => {
@@ -171,7 +171,10 @@ export const getTableColumns = async (
 	}
 };
 
-export const getFunctions = async (dbUrl: string, schemaName: string = 'public'): Promise<FuncQueryResult> => {
+export const getRoutines = async (
+	dbUrl: string,
+	schemaName: string = 'public',
+): Promise<RoutineQueryResult> => {
 	const startTime = performance.now();
 
 	try {
@@ -180,21 +183,22 @@ export const getFunctions = async (dbUrl: string, schemaName: string = 'public')
 		const result = await client`
       SELECT 
         routine_name AS "name",
-        data_type AS "returnType"
+        routine_type AS "routineType",
+				COALESCE(data_type, 'void') AS "returnType"
       FROM 
         information_schema.routines
       WHERE 
         routine_schema = ${schemaName}
-        AND routine_type = 'FUNCTION'
+				AND routine_type IN ('FUNCTION', 'PROCEDURE')
       ORDER BY 
         routine_name;
     `;
 
-		return formatSuccessResponse<Func>(result, startTime);
+		return formatSuccessResponse<Routine>(result, startTime);
 	} catch (err: any) {
 		return {
 			success: false,
-			error: err.message || 'Failed to retrieve schema functions',
+			error: err.message || 'Failed to retrieve schema routines',
 			data: [],
 			meta: {
 				query: 'Internal Schema Query',
@@ -208,38 +212,42 @@ export const getFunctionDetails = async (
 	dbUrl: string,
 	schemaName: string,
 	functionName: string,
-): Promise<FuncDetailsQueryResult> => {
+): Promise<RoutineDetailsQueryResult> => {
 	const startTime = performance.now();
 
 	try {
 		const client = getClient(dbUrl);
 
 		const result = await client`
-      SELECT 
-        p.oid AS "oid",
-        p.proname AS "name",
-        l.lanname AS "language",
-        pg_get_function_result(p.oid) AS "returnType",
-        pg_get_function_arguments(p.oid) AS "argumentSignature",
-        pg_get_functiondef(p.oid) AS "body",
-        CASE p.provolatile
-          WHEN 'i' THEN 'IMMUTABLE'
-          WHEN 's' THEN 'STABLE'
-          WHEN 'v' THEN 'VOLATILE'
-        END AS "behaviorType"
-      FROM 
-        pg_catalog.pg_proc p
-      JOIN 
-        pg_catalog.pg_namespace n ON n.oid = p.pronamespace
-      JOIN 
-        pg_catalog.pg_language l ON l.oid = p.prolang
-      WHERE 
-        n.nspname = ${schemaName}
-        AND p.proname = ${functionName}
-        AND p.prokind = 'f';
+			SELECT 
+				p.oid AS "oid",
+				p.proname AS "name",
+				CASE p.prokind
+					WHEN 'f' THEN 'FUNCTION'
+					WHEN 'p' THEN 'PROCEDURE'
+				END AS "routineType",
+				l.lanname AS "language",
+				COALESCE(NULLIF(pg_get_function_result(p.oid), ''), 'void') AS "returnType",
+				pg_get_function_arguments(p.oid) AS "argumentSignature",
+				pg_get_functiondef(p.oid) AS "body",
+				CASE p.provolatile
+					WHEN 'i' THEN 'IMMUTABLE'
+					WHEN 's' THEN 'STABLE'
+					WHEN 'v' THEN 'VOLATILE'
+				END AS "behaviorType"
+			FROM 
+				pg_catalog.pg_proc p
+			JOIN 
+				pg_catalog.pg_namespace n ON n.oid = p.pronamespace
+			JOIN 
+				pg_catalog.pg_language l ON l.oid = p.prolang
+			WHERE 
+				n.nspname = ${schemaName}
+				AND p.proname = ${functionName}
+				AND p.prokind IN ('f', 'p');
     `;
 
-		return formatSuccessResponse<FuncDetails>(result, startTime);
+		return formatSuccessResponse<RoutineDetails>(result, startTime);
 	} catch (err: any) {
 		return {
 			success: false,
@@ -489,15 +497,15 @@ export const getSchemaDataUsage = async (
 };
 
 export const getTableRLS = async (
-  dbUrl: string,
-  tableName: string,
-  schemaName = 'public',
+	dbUrl: string,
+	tableName: string,
+	schemaName = 'public',
 ): Promise<RLSQueryResult> => {
-  const startTime = performance.now();
-  try {
-    const client = getClient(dbUrl);
+	const startTime = performance.now();
+	try {
+		const client = getClient(dbUrl);
 
-    const result = await client`
+		const result = await client`
       SELECT
         c.relrowsecurity AS "isRlsEnabled",
         c.relforcerowsecurity AS "isRlsForced",
@@ -529,16 +537,16 @@ export const getTableRLS = async (
         AND c.relkind = 'r';
     `;
 
-    return formatSuccessResponse<RLSInfo>(result, startTime);
-  } catch (err: any) {
-    return {
-      success: false,
-      error: err.message || 'Failed to retrieve row level security setup',
-      data: [],
-      meta: {
-        query: 'Internal Schema Query',
-        executionTimeMs: formatExecutionTime(startTime),
-      },
-    };
-  }
+		return formatSuccessResponse<RLSInfo>(result, startTime);
+	} catch (err: any) {
+		return {
+			success: false,
+			error: err.message || 'Failed to retrieve row level security setup',
+			data: [],
+			meta: {
+				query: 'Internal Schema Query',
+				executionTimeMs: formatExecutionTime(startTime),
+			},
+		};
+	}
 };

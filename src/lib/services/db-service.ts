@@ -7,13 +7,13 @@ import type {
 	DbResponse,
 	ForeignKey,
 	ForeignKeyQueryResult,
-	Func,
-	FuncDetails,
-	FuncDetailsQueryResult,
-	FuncQueryResult,
 	QueryResult,
 	RLSInfo,
 	RLSQueryResult,
+	Routine,
+	RoutineDetails,
+	RoutineDetailsQueryResult,
+	RoutineQueryResult,
 	TableIndex,
 	TableIndexQueryResult,
 	TableSizeMetrics,
@@ -133,9 +133,9 @@ export const getTableColumns = async (params: Params): Promise<Column[]> => {
 	return result.data;
 };
 
-export const getFunctions = async (params: Params): Promise<Func[]> => {
-	const { data: result } = await apiClient.get<FuncQueryResult>(
-		`/api/schemas/${params.schema}/functions?db=${encodedDbUrl(params)}`,
+export const getRoutines = async (params: Params): Promise<Routine[]> => {
+	const { data: result } = await apiClient.get<RoutineQueryResult>(
+		`/api/schemas/${params.schema}/routines?db=${encodedDbUrl(params)}`,
 	);
 
 	if (!result.success) throw new Error(result.error);
@@ -143,11 +143,11 @@ export const getFunctions = async (params: Params): Promise<Func[]> => {
 	return result.data;
 };
 
-export const getFunctionDetails = async (
-	params: Params & { functionName: string },
-): Promise<FuncDetails[]> => {
-	const { data: result } = await apiClient.get<FuncDetailsQueryResult>(
-		`/api/schemas/${params.schema}/functions/function-name/${params.functionName}?db=${encodedDbUrl(params)}`,
+export const getRoutineDetails = async (
+	params: Params & { routineName: string },
+): Promise<RoutineDetails[]> => {
+	const { data: result } = await apiClient.get<RoutineDetailsQueryResult>(
+		`/api/schemas/${params.schema}/routines/function-name/${params.routineName}?db=${encodedDbUrl(params)}`,
 	);
 
 	if (!result.success) throw new Error(result.error);
