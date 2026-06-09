@@ -33,7 +33,7 @@
 
 {#if result?.success}
 	<Table.Root>
-		<Table.Header class="sticky top-0 z-10">
+		<Table.Header class="sticky top-0 z-10 bg-card shadow-xs">
 			<Table.Row>
 				{#if showIndex}
 					<Table.Head class="w-1">#</Table.Head>
