@@ -57,6 +57,7 @@ jobs:
         with:
           context: .
           load: true # load into local ci pipeline docker client
+          platforms: linux/amd64,linux/arm64 # Also for arm, so it's already cached
           tags: pgbrowser:local
           cache-from: type=gha
           cache-to: type=gha,mode=max
