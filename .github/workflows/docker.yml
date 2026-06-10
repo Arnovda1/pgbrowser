@@ -57,14 +57,14 @@ jobs:
         with:
           context: .
           load: true # load into local ci pipeline docker client
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:local
+          tags: pgbrowser:local
           cache-from: type=gha
           cache-to: type=gha,mode=max
     
       - name: Run trivy for vulnerability scanning
         uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36
         with:
-          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:local'
+          image-ref: 'pgbrowser:local'
           format: 'table'
           exit-code: '1' # fails if serious vulnerabilities found
           ignore-unfixed: true
