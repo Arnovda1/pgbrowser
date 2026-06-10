@@ -38,7 +38,10 @@
       variant="ghost" 
       class="flex items-center gap-1.5 px-1.5 pr-0 group-hover:text-foreground"
     >
-      <Icon class="size-4 text-muted-foreground group-hover:text-foreground" /> {label}
+      <Icon class="size-4 text-muted-foreground group-hover:text-foreground" />
+      <span class='max-w-32 sm:max-w-64 truncate'>
+        {label}
+      </span>
     </Button>
 
     <DropdownMenu.Root>

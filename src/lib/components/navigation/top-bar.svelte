@@ -117,8 +117,10 @@
 			{#if db.connection}
 				<Breadcrumb.Link class="flex items-center gap-1.5">
 					<Button variant="ghost">
-						<PostgresIcon />
-						{' '}{db.connection.host}:{db.connection.port}
+						<PostgresIcon />{' '}
+						<span class='max-w-32 sm:max-w-64 truncate' title={`${db.connection.host}:${db.connection.port}`}>
+							{db.connection.host}:{db.connection.port}
+						</span>
 					</Button>
 				</Breadcrumb.Link>
 			{/if}

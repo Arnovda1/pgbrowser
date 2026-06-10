@@ -19,13 +19,8 @@
 	let search = $state<string>('');
 
 	$effect(() => {
-		const currentUrlTab = page.url.searchParams.get('tab');
-		if (currentUrlTab) tab = currentUrlTab;
-	});
-
-	$effect(() => {
 		if (search) tab = 'search';
-		else tab = 'tables';
+		else tab = page.url.searchParams.get('tab') || 'tables'
 	});
 
 </script>
