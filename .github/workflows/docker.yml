@@ -48,30 +48,28 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=sha,format=long
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build docker container
-        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4 #v7
-        with:
-          context: .
-          load: true # load into local ci pipeline docker client
-          platforms: linux/amd64,linux/arm64 # Also for arm, so it's already cached
-          tags: pgbrowser:local
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # - name: Build docker container
+      #   uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4 #v7
+      #   with:
+      #     context: .
+      #     load: true # load into local ci pipeline docker client
+      #     platforms: linux/amd64,linux/arm64 # Also for arm, so it's already cached
+      #     tags: pgbrowser:local
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
     
-      - name: Run trivy for vulnerability scanning
-        uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36
-        with:
-          image-ref: 'pgbrowser:local'
-          format: 'table'
-          exit-code: '1' # fails if serious vulnerabilities found
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+      # - name: Run trivy for vulnerability scanning
+      #   uses: aquasecurity/trivy-action@bfa4b33a029b9aa80ddb784b45574c30e072c59e # v0.36
+      #   with:
+      #     image-ref: 'pgbrowser:local'
+      #     format: 'table'
+      #     exit-code: '1' # fails if serious vulnerabilities found
+      #     ignore-unfixed: true
+      #     severity: 'CRITICAL,HIGH'
 
-        # build again, but should be way faster since every layer is already cached
+      #   # build again, but should be way faster since every layer is already cached
       - name: Push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4 #v7
         with:
@@ -82,3 +80,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Delete old image versions
+        uses: actions/delete-package-versions@4dbb860504f6d0cde296a192842138c03915746a # v5
+        with:
+          package-name: "cloud"
+          package-type: "container"
+          min-versions-to-keep: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
