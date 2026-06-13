@@ -29,8 +29,8 @@ jobs:
       - name: Run tests
         run: bun test
     
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@259a565a6f30a57c28f9ea913f2d359b43ff5fc9 # v4
+      # - name: Setup QEMU
+      #   uses: docker/setup-qemu-action@259a565a6f30a57c28f9ea913f2d359b43ff5fc9 # v4
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@22b48a429f10e1de233237b5c534c9c3d2e41597 # v4
@@ -75,7 +75,7 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64 # platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
