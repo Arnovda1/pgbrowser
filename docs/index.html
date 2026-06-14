@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <title>pgbrowser - The database client you've been missing</title>
+    <title>pgbrowser</title>
 
     <style>
         h1 {
@@ -33,10 +33,7 @@
 </head>
 
 <body>
-    <main class="
-            min-h-dvh w-dvw
-            grid grid-cols-[5%_90%_5%] sm:grid-cols-[15%_70%_15%]
-        ">
+    <main class="min-h-dvh w-dvw grid grid-cols-[5%_90%_5%] sm:grid-cols-[15%_70%_15%]">
 
         <aside class="relative before:content-[''] before:fixed before:top-0 before:bottom-0 before:w-[5%] sm:before:w-[15%] before:bg-[radial-gradient(#62748e_1px,transparent_1px)] before:bg-[size:16px_16px] before:-z-10"></aside>
 
@@ -55,9 +52,8 @@
 
             <p class="text-center text-slate-600 max-w-xl leading-relaxed">
                 A web-based <strong class="text-slate-900">PostgreSQL client</strong> built for speed and simplicity.
-                It compiles into a <span
-                    class="font-bold text-slate-900">single
-                    binary</span> with zero external dependencies and is packaged as a <span class="font-bold text-slate-900">docker container</span>.
+                It compiles into a <span class="font-bold text-slate-900">single binary</span> 
+                with zero external dependencies and is packaged as a <span class="font-bold text-slate-900">docker container</span>.
             </p>
 
             <!-- screenshots -->
@@ -68,7 +64,7 @@
 
             <!-- demo and deployment -->
 
-            <div class="flex flex-col items-center gap-4">
+            <!-- <div class="flex flex-col items-center gap-4">
                 <a href="https://pgbrowser-demo.van-der-auwera.com"
                     class="bg-[#336791] hover:bg-[#336791]/90 transition-all inset transform active:translate-y-0.5 shadow-md hover:shadow-lg text-lg font-medium cursor-pointer text-white select-none px-8 py-3 rounded-full text-center">
                     Try out the live demo!
@@ -80,7 +76,19 @@
                     <span class="text-xs text-slate-500"><code
                             class="bg-slate-100 px-1 py-0.5 rounded">docker run -p 3000:3000 ghcr.io/arnovda1/pgbrowser:latest</code></span>
                 </div>
+            </div> -->
+
+            <div class="text-center">
+                <h2 class="text-slate-900 mb-1 flex items-center gap-1 font-medium text-center">
+                    Deploy locally with
+                </h2>
+
+                <code class="text-xs text-slate-500 bg-slate-100 px-1 py-0.5 rounded">
+                    docker run -p 3000:3000 ghcr.io/arnovda1/pgbrowser:latest
+                </code>
             </div>
+
+
 
             <!-- features -->
 
