@@ -5,12 +5,12 @@
 	let { data } = $props();
 </script>
 
-<div class="grid pb-50">
+<div class="grid space-y-4 pb-50">
 	{#each data.routineDetails as routine, i}
 		<RoutineEditor {routine} />
 
 		{#if i + 1 !== data.routineDetails.length}
-			<Separator class="mb-16" />
+			<Separator class="mt-14 mb-8" />
 		{/if}
 	{/each}
 </div>

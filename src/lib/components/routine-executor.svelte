@@ -63,8 +63,8 @@
 	<Button onclick={executeRoutine} size="sm" disabled={!code || loading}>
 		<PlayIcon /> Run
 	</Button>
-	<div class="my-auto h-fit w-full">
-		<SqlEditor bind:code bind:view />
+	<div class="my-auto h-fit w-full min-w-0">
+		<SqlEditor bind:code bind:view class="scrollbar-none" />
 	</div>
 </div>
 

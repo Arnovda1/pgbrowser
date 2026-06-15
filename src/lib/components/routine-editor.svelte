@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { query } from '$lib/services/db-service';
 	import type { RoutineDetails } from '$lib/types';
+	import { cleanRoutinesSignature } from '$lib/util/routines';
 	import beautifySql from '$lib/util/sql-beautify';
 	import type { EditorView } from 'codemirror';
 	import { CodeIcon, PenIcon, RotateCcwIcon, TrashIcon } from 'lucide-svelte';
@@ -58,9 +59,11 @@
 		loading = true;
 
 		try {
+			const routineName = `${routine.name}(${cleanRoutinesSignature(routine.argumentSignature)})`;
+
 			const result = await query(
 				page.params,
-				`DROP ${routine.routineType} ${routine.oid}::regprocedure;`,
+				`DROP ${routine.routineType} ${routineName};`,
 			);
 
 			if (result.error) {
