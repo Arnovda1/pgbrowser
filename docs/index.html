@@ -211,12 +211,22 @@
 
     <script>
         // docker tracking
-        document.getElementById('docker-run-command').addEventListener('pointerup', () => {
-            const selection = window.getSelection().toString();
-            
-            if (selection.length > 0 && window.umami) {
-            window.umami.track('Docker run command', { text: selection });
-            }
+        let selectionTimeout;
+
+        document.addEventListener('selectionchange', () => {
+            clearTimeout(selectionTimeout);
+
+            selectionTimeout = setTimeout(() => {
+                const selection = window.getSelection();
+                const selectedText = selection.toString().trim();
+                const targetElement = document.getElementById('docker-run-command');
+
+                if (selectedText.length > 0 && window.umami) {
+                    if (targetElement.contains(selection.anchorNode)) {
+                        window.umami.track('Docker run command', { text: selectedText });
+                    }
+                }
+            }, 700);
         });
 
         // carousel
