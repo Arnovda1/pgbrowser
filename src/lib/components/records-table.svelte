@@ -43,7 +43,7 @@
 					<Table.Head class="w-1" />
 				{/if}
 
-				{#each result?.meta.columns as column (column.number)}
+				{#each result?.meta.columns as column}
 					<Table.Head class="w-48 truncate">
 						{column.name}
 						<span class="text-xs font-normal text-muted-foreground">{column.type}</span>

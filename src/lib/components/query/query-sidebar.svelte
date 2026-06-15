@@ -52,7 +52,7 @@
                   {query.query.slice(0, 50)}
                 </Item.Title>
               </HoverCard.Trigger>
-              <HoverCard.Content class='whitespace-pre-line w-60 p-1.5'>
+              <HoverCard.Content class='whitespace-pre-line w-72 p-1.5'>
                 <div class="border rounded-2xl overflow-y-auto max-h-80">
                   <ReadOnlyEditor code={query.query}  />
                 </div>
