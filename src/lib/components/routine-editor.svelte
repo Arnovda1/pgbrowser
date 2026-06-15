@@ -97,7 +97,7 @@
 	});
 </script>
 
-<div class="space-y-2 pb-5">
+<div class="space-y-2 pb-5 min-w-0">
 	<div class="flex justify-between">
 		<!-- buttons -->
 		<div class="flex gap-1.5">
