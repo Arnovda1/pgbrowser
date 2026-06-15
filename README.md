@@ -32,6 +32,19 @@ See [todos.md](./todos.md) for the full list of planned features, performance im
 docker run -p 3000:3000 ghcr.io/arnovda1/pgbrowser:latest
 ```
 
+or docker compose
+
+```yaml
+name: pgbrowser
+services:
+  pgbrowser:
+    image: ghcr.io/arnovda1/pgbrowser:latest
+    restart: unless-stopped
+    container_name: pgbrowser
+    ports:
+      - 3000:3000
+```
+
 > Use `host.docker.internal` instead of `localhost` when connecting to a postgres server running on the host machine.
 
 ### From Source

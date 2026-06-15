@@ -21,6 +21,7 @@ This document tracks the current status, planned features, and known issues for 
 - [ ] **Custom Types & Enums**: Support for listing and managing UDTs and Enums.
 - [ ] **Explain Analyze**: Visualizer for `EXPLAIN (ANALYZE, ...)` results.
 - [ ] **ER Diagram**: Visual representation of database schema relationships.
+- [ ] **Path Aware**: Make path aware so it doesn't need a subdomain, eg: example.com/admin/pgbrowser
 
 ## Issues
 
@@ -29,6 +30,9 @@ This document tracks the current status, planned features, and known issues for 
 - [ ] **Better Error Messages**: Parse Postgres error codes (SQLSTATE) to provide more user-friendly explanations.
 - [ ] **Enums**: Currently enums show as unknown(69920)
 - [ ] **Virtual Scrolling**: Implement a virtualized list for the `records-table.svelte` to handle 1,000+ rows efficiently.
+- [ ] **Fix view selection**: Selecting a record in a view means all rows get highlighted + json viewer is empty
+- [ ] **Show load more in views**: With views with 50+ records, show the view more button like in the tables
+- [ ] **Show the record**: instead of the id at .../table/[table]/record/[id]
 
 ## Completed
 

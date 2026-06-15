@@ -14,3 +14,8 @@ dist-ssr
 *.vscode
 
 .svelte-kit
+
+# Tests
+tests/e2e/out
+tests/e2e/report
+tests/e2e/.connection.json
