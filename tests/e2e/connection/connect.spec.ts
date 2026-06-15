@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
 import { dbConnection, dbCredentials } from '../db.config';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test('should log into the database client', async ({ page }) => {
 	await page.goto('http://localhost:5173');
 	await expect(page).toHaveURL('http://localhost:5173/connect');

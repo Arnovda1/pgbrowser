@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { CONNECTION_FILE } from './tests/e2e/db.config';
 
 export default defineConfig({
 	testDir: './tests/e2e',
@@ -25,7 +26,7 @@ export default defineConfig({
 		// Main browser tests
 		{
 			name: 'chromium',
-			use: { ...devices['Desktop Chrome'] },
+			use: { ...devices['Desktop Chrome'], storageState: CONNECTION_FILE },
 			dependencies: ['setup connection'],
 		},
 		// { // only chromium right now
