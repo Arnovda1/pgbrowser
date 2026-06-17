@@ -1,13 +1,8 @@
 import { test as setup } from '@playwright/test';
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from '@testcontainers/postgresql';
 import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import postgres from 'postgres';
-import { dbConnection, dbCredentials } from './db.config';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { dbConnection, dbCredentials, TEMP_CONFIG_FILE } from './db.config';
 
 let postgresContainer: StartedPostgreSqlContainer;
 
@@ -24,8 +19,7 @@ setup('start and seed temporary postgres', async () => {
 		port: String(postgresContainer.getPort()),
 	};
 
-	const tempConfigPath = path.join(__dirname, '../.test-db-config.json');
-	fs.writeFileSync(tempConfigPath, JSON.stringify(configData, null, 2));
+	fs.writeFileSync(TEMP_CONFIG_FILE, JSON.stringify(configData, null, 2));
 
 	// For teardown script
 	(globalThis as any).__POSTGRES_CONTAINER__ = postgresContainer;
@@ -45,5 +39,27 @@ setup('start and seed temporary postgres', async () => {
     ('John Doe', 'john.doe@example.com')
     ;
   `;
+
+	await client`
+    CREATE VIEW user_emails AS
+    SELECT email FROM users;
+  `;
+
+	await client`
+    CREATE FUNCTION get_user_count() RETURNS integer AS $$
+    BEGIN
+      RETURN (SELECT count(*) FROM users);
+    END;
+    $$ LANGUAGE plpgsql;
+  `;
+
+	await client`
+    CREATE PROCEDURE add_new_user(new_name VARCHAR, new_email VARCHAR) AS $$
+    BEGIN
+      INSERT INTO users (name, email) VALUES (new_name, new_email);
+    END;
+    $$ LANGUAGE plpgsql;
+  `;
+
 	await client.end();
 });

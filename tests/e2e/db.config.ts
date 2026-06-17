@@ -11,13 +11,13 @@ export const dbCredentials = {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const CONNECTION_FILE = path.join(__dirname, '.connection.json');
-const TEMP_CONFIG_PATH = path.join(__dirname, '../.test-db-config.json');
+export const CONNECTION_FILE = path.join(__dirname, './tmp/.connection.json');
+export const TEMP_CONFIG_FILE = path.join(__dirname, './tmp/.test-db-config.json');
 
 function getSavedConfig() {
-	if (fs.existsSync(TEMP_CONFIG_PATH)) {
+	if (fs.existsSync(TEMP_CONFIG_FILE)) {
 		try {
-			return JSON.parse(fs.readFileSync(TEMP_CONFIG_PATH, 'utf-8'));
+			return JSON.parse(fs.readFileSync(TEMP_CONFIG_FILE, 'utf-8'));
 		} catch {
 			return {};
 		}

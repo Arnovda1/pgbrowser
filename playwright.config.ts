@@ -7,12 +7,15 @@ export default defineConfig({
 	reporter: [['html', { outputFolder: './tests/e2e/report' }]],
 	use: { trace: 'retain-on-failure', screenshot: 'only-on-failure', video: 'on' },
 	outputDir: './tests/e2e/out',
+	timeout: 10_000,
+	expect: { timeout: 10_000 },
 	projects: [
 		// Setup + connect and cleanup of db
 		{
 			name: 'setup db',
 			testMatch: /global\.setup\.ts/,
 			teardown: 'cleanup db',
+			timeout: 30_000,
 		},
 		{
 			name: 'setup connection',

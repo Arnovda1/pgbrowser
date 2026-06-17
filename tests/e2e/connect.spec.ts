@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { dbConnection, dbCredentials } from '../db.config';
+import { dbConnection, dbCredentials } from './db.config';
 
 test.use({ storageState: { cookies: [], origins: [] } });
 

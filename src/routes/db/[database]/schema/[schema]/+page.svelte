@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Erd from '$lib/components/erd.svelte';
 	import NotFound from '$lib/components/global/not-found.svelte';
@@ -19,13 +20,26 @@
 	let search = $state<string>('');
 
 	$effect(() => {
-		if (search) tab = 'search';
-		else tab = page.url.searchParams.get('tab') || 'tables'
+		if (search) {
+			tab = 'search';
+		} else {
+			const urlTab = page.url.searchParams.get('tab') || 'tables';
+			if (tab !== urlTab && tab !== 'search') {
+				tab = urlTab;
+			}
+		}
 	});
 
+	const onTabChange = (v: string | undefined) => {
+		if (!v || v === 'search') return;
+		tab = v;
+		const url = new URL(page.url);
+		url.searchParams.set('tab', v);
+		goto(url, { replaceState: true, noScroll: true, keepFocus: true });
+	};
 </script>
 
-<Tabs.Root bind:value={tab} class='h-full'>
+<Tabs.Root value={tab} onValueChange={onTabChange} class="h-full">
 	<div class="flex justify-between gap-1.5">
 		<Tabs.List>
 			<Tabs.Trigger value="tables">Tables</Tabs.Trigger>
@@ -39,9 +53,9 @@
 		</Tabs.List>
 
 		<Input
-			class='max-w-full min-w-14 w-fit'
-			placeholder='Search schema'
-			oninput={e => search = e.currentTarget.value.toLowerCase()}
+			class="max-w-full min-w-14 w-fit"
+			placeholder="Search schema"
+			oninput={(e) => (search = e.currentTarget.value.toLowerCase())}
 		/>
 	</div>
 
@@ -76,11 +90,11 @@
 			<ListViewsItems views={data.views} {search} />
 			<ListRoutinesItems routines={data.routines} {search} />
 			<ListTriggersItems triggers={data.triggers} {search} />
-			
+
 			<div class="group-has-[:nth-child(2)]:hidden col-span-full text-center">
-      <!-- <p>No results found for "{search}".</p> -->
-			 <NotFound>No results found for "{search}"</NotFound>
-    	</div>
+				<!-- <p>No results found for "{search}".</p> -->
+				<NotFound>No results found for "{search}"</NotFound>
+			</div>
 		</div>
 	</Tabs.Content>
 </Tabs.Root>
